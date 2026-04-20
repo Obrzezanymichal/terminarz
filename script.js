@@ -1,104 +1,83 @@
-function ile_dni(miesiac_nr, rok) {
-    if (miesiac_nr == 2) {
-        if (rok % 4 == 0 && (rok % 100 != 0 || rok % 400 == 0)) {
-            return 29;
-   }else {
-return 28
-   }}
-}
-function DniwRoku(miesiac_nr,rok) {
-switch (miesiac_nr) {
-    case 1: 
-    case 3:
-    case 5:
-    case 7:
-    case 8:
-    case 10:
-case 12:
-  return 31;
+var dzis = new Date();
+var m = dzis.getMonth();
+var r = dzis.getFullYear();
 
-  case 4:
-  case 6:
-  case 9:
- case 11:
-  return 30;
-}
+function pokazKalendarz() {
+    var siatka = document.getElementById("siatka");
+    var tytul = document.getElementById("miesiac_rok");
+    siatka.innerHTML = "";
+
+    var nazwy = ["Styczeń", "Luty", "Marzec", "Kwiecień", "Maj", "Czerwiec", "Lipiec", "Sierpień", "Wrzesień", "Październik", "Listopad", "Grudzień"];
+    tytul.innerText = nazwy[m] + " " + r;
+
+    var ileDni = new Date(r, m + 1, 0).getDate();
+
+    for (var i = 1; i <= ileDni; i++) {
+        var mm = m + 1; if (mm < 10) mm = "0" + mm;
+        var dd = i; if (dd < 10) dd = "0" + dd;
+        var dataString = r + "-" + mm + "-" + dd;
+
+        var box = document.createElement("div");
+        box.className = "dzien";
+        box.id = "dzien-" + dataString;
+        box.innerHTML = "<b>" + i + "</b>";
+
+        // Wyswietlanie wpisow uzywajac Twoich kolumn: dataZadania i wpis
+        for (var j = 0; j < daneZSerwera.length; j++) {
+            if (daneZSerwera[j].dataZadania == dataString) {
+                dodajWpisDoKafelka(box, daneZSerwera[j].wpis);
+            }
+        }
+
+        box.setAttribute("onclick", "otworzPopup('" + dataString + "')");
+        siatka.appendChild(box);
+    }
 }
 
-function kafelki_kalendarza(ile) {
-    const kalendarz = document.querySelector("#kalendarz");
+function dodajWpisDoKafelka(kafelek, tekst) {
+    var divWpis = document.createElement("div");
+    divWpis.className = "wpis-czerwony";
+    divWpis.innerText = tekst;
+    kafelek.appendChild(divWpis);
+}
 
-    Array.from(kalendarz.children).forEach((item) => {
-        item.remove();
+function zapiszDane() {
+    var tekstZadania = document.getElementById("nazwa_wpis").value;
+    var wybranaData = document.getElementById("data_w_formularzu").value;
+
+    if(tekstZadania == "") { alert("Wpisz treść!"); return; }
+
+    var fd = new FormData();
+    fd.append('wpis', tekstZadania);
+    fd.append('data_wybrana', wybranaData);
+
+    fetch('zapisz.php', {
+        method: 'POST',
+        body: fd
+    })
+    .then(res => res.text())
+    .then(wynik => {
+        if (wynik.trim() == "sukces") {
+            var kafelek = document.getElementById("dzien-" + wybranaData);
+            if (kafelek) dodajWpisDoKafelka(kafelek, tekstZadania);
+            zamknij();
+            document.getElementById("nazwa_wpis").value = "";
+        } else {
+            alert(wynik); // Pokaze blad jesli nazwy kolumn sie nie zgadzaja
+        }
     });
-    let i = weekDay(1, miesiac, rok); 
-do {
-let kafelek = document.createElement("div");
-kafelek.classList.add("kafelek_kal");
-kalendarz.appendChild(kafelek);
-i--;
-} while (i > 0);
-
-for (let i = 1; i <=ile; i++) {
-    let kafelek = document.createElement("div");
-    kafelek.classList.add("kafelek_kal");
-    let daySpan = document.createElement("span");
-    let infoDay = document.createElement("p");
-    daySpan.textContent = i;
-    infoDay.textContent = dniTygodnia[weekDay(i, miesiac, rok)];
-    kafelek.appendChild(daySpan);
-    kafelek.appendChild(infoDay);
-
-    if (
-        new Date().getDate() == i &&
-        rok == new Date().getFullYear()
-    ) {
-        kafelek.classList.add("toDay");
-    } else {
-        kafelek.classList.add("colored");
-    }
-    kalendarz.appendChild(kafelek); 
 }
-let miesiac = new Date().getMonth() + 1;
-let rok = new Date().getFullYear();
+
+function otworzPopup(data) {
+    document.getElementById("data_w_formularzu").value = data;
+    document.getElementById("mojPopup").style.display = "block";
 }
-//TODO
 
+function zamknij() {
+    document.getElementById("mojPopup").style.display = "none";
+}
 
+document.getElementById("btn_back").onclick = function() { m--; if (m < 0) { m = 11; r--; } pokazKalendarz(); };
+document.getElementById("btn_next").onclick = function() { m++; if (m > 11) { m = 0; r++; } pokazKalendarz(); };
 
-function showPOPUP(content) {
-    let popup = document.querySelector(".back-drop");
-    let contentWrap;
-    if (!popup) {
-        const backDrop = document.createElement("div");
-        backDrop.classList.add("backdrop");
-        document.body.appendChild(backDrop);
-        const popWrap = document.createElement("section");
-        popWrap.classList.add("pop-wrap");
-        const pHeader = document.createElement("header");
-        contentWrap = document.createElement("section");
-        const pFooter = document.createElement("footer");
-
-        pHeader.textContent="szczegóły";
-        const btn = document.createElement("button");
-        pFooter.appendChild(btn);
-        // btn.addEventListener("click", ) //TODO
-
-        backDrop.appendChild(popWrap);
-        popWrap.appendChild(pHeader);
-
-        const close = document.createElement("button");
-        close.textContent="X";
-        close.addEventListener("click" , hiddenPOPUP);
-        pHeader.appendChild(close);
-
-        popWrap.appendChild(contentWrap);
-        popWrap.appendChild(pFooter);
-    }else {
-        contentWrap = popup.querySelector("section");
-        popup.classList.remove("hidden");
-    }
-    Array.from(contentWrap,children).forEach(item)  
-        item.remove();
-    
-    }
+pokazKalendarz();
