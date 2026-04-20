@@ -1,20 +1,141 @@
-*{
-    color:aquamarine
-}
-main{
-    background-color: black;
-}
-nav{
-    background-color: black;
-}
-footer{
-    background-color: black;
+/* Główne ustawienia strony */
+body {
+    background-color: #1a1a2e; /* Ciemny, nowoczesny granat */
+    color: #ffffff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+/* Nawigacja (Przyciski i Miesiąc) */
+.nawigacja {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+}
 
-div.kafelek_kal {
-    background-color: aqua;
-    margin: 20%;
-    width: 50px;
-    height: 30px;
+#miesiac_rok {
+    font-size: 24px;
+    font-weight: 300;
+    min-width: 250px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+button {
+    background-color: #e94560; /* Główny kolor akcentu */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #ff2e63;
+}
+
+/* Siatka kalendarza */
+#siatka {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* Zawsze 7 równych kolumn */
+    gap: 10px;
+    max-width: 900px;
+    width: 100%;
+}
+
+.dzien {
+    background-color: #16213e;
+    min-height: 110px;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #0f3460;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dzien:hover {
+    border-color: #e94560;
+    background-color: #1b264d;
+}
+
+.dzien b {
+    display: block;
+    margin-bottom: 8px;
+    color: #888;
+}
+
+/* Czerwone paski zadań */
+.wpis-czerwony {
+    background-color: #e94560;
+    color: white;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Popup / Modal */
+#mojPopup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 1000;
+}
+
+.popup-tresc {
+    background-color: #1a1a2e;
+    width: 90%;
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 30px;
+    border-radius: 15px;
+    border: 1px solid #e94560;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+#zamknij_X {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 20px;
+    color: #888;
+    cursor: pointer;
+}
+
+#zamknij_X:hover {
+    color: #e94560;
+}
+
+/* Formularz wewnątrz popupa */
+form h3 { margin-top: 0; color: #e94560; }
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #0f3460;
+    background-color: #16213e;
+    color: white;
+    box-sizing: border-box;
+}
+
+#zapiszPrzycisk {
+    width: 100%;
+    margin-top: 15px;
 }
